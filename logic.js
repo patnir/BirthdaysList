@@ -1,11 +1,15 @@
 ﻿/// <reference path="index.html">
+var gContactList;
 
 function body_load() {
     btnNavAddContact.onmousedown = btnNavAddContact_onmousedown;
     btnNavShowContacts.onmousedown = btnNavShowContacts_onmousedown;
     btnAdd.onmousedown = btnAdd_onmousedown;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
+
     errorMessageMain.style.visibility = 'hidden';
+    
+    gContactList = [];
 }
 
 function convertToPhoneNumber() {
@@ -18,7 +22,14 @@ function btnAdd_onmousedown() {
     }
 
     var entry = new Contact(txtName.value.trim(), txtBirthDate.value.trim(), txtPhoneNumber.value.trim());
-    entry.checkPrint();
+    gContactList.push(entry);
+
+    var checkstring = "";
+
+    for (var i = 0; i < gContactList.length; i++) {
+        checkstring = checkstring + gContactList[i].Serialize();
+    }
+    alert(checkstring);
 }
 
 function btnErrorMessageOK_onmousedown() {
