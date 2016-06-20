@@ -17,6 +17,8 @@ function btnAdd_onmousedown() {
         return;
     }
 
+    var entry = new Contact(txtName.value.trim(), txtBirthDate.value.trim(), txtPhoneNumber.value.trim());
+    entry.checkPrint();
 }
 
 function btnErrorMessageOK_onmousedown() {
@@ -58,6 +60,19 @@ function validateInput() {
                 return false;
             }
         }
+    }
+
+    // check number
+    phoneNumberString = txtPhoneNumber.value;
+    if (phoneNumberString.length != 10) {
+        showErrorMessage(phoneNumberErrorMessage);
+        txtName.focus();
+        return false;
+    }
+    if (checkIfStringIsNumber(phoneNumberString) === false) {
+        showErrorMessage(phoneNumberErrorMessage);
+        txtName.focus();
+        return false;
     }
 }
 
