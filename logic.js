@@ -10,6 +10,8 @@ function body_load() {
     errorMessageMain.style.visibility = 'hidden';
     
     gContactList = [];
+
+    displayAllContacts();
 }
 
 function convertToPhoneNumber() {
@@ -23,13 +25,6 @@ function btnAdd_onmousedown() {
 
     var entry = new Contact(txtName.value.trim(), txtBirthDate.value.trim(), txtPhoneNumber.value.trim());
     gContactList.push(entry);
-
-    var checkstring = "";
-
-    for (var i = 0; i < gContactList.length; i++) {
-        checkstring = checkstring + gContactList[i].Serialize();
-    }
-    alert(checkstring);
 }
 
 function btnErrorMessageOK_onmousedown() {
@@ -45,7 +40,7 @@ function showErrorMessage(message) {
 
 function validateInput() {
     var nameErrorMessage = "Enter a name.";
-    var birthDateErrorMessage = "Enter a birth date in the following format: YYYY/MM/DD";
+    var birthDateErrorMessage = "Enter a valid birth date in the following format: YYYY/MM/DD";
     var phoneNumberErrorMessage = "Enter a 7 digit phone number";
 
     // check Name
@@ -63,14 +58,26 @@ function validateInput() {
         txtName.focus();
         return false;
     }
-    else {
-        for (var i = 0; i < birthDateParts.length; i++) {
-            if (checkIfStringIsNumber(birthDateParts[i]) === false) {
-                showErrorMessage(birthDateErrorMessage);
-                txtName.focus();
-                return false;
-            }
-        }
+    if (checkIfStringIsNumber(birthDateParts[0]) === false 
+        || parseInt(birthDateParts[0]) < 0
+        || parseInt(birthDateParts[0]) > 9999) {
+        showErrorMessage(birthDateErrorMessage);
+        txtName.focus();
+        return false;
+    }
+    else if (checkIfStringIsNumber(birthDateParts[1]) === false 
+        || parseInt(birthDateParts[1]) < 0
+        || parseInt(birthDateParts[1]) > 12) {
+        showErrorMessage(birthDateErrorMessage);
+        txtName.focus();
+        return false;
+    }
+    else if (checkIfStringIsNumber(birthDateParts[2]) === false
+        || parseInt(birthDateParts[2]) < 0
+        || parseInt(birthDateParts[2]) > 31) {
+        showErrorMessage(birthDateErrorMessage);
+        txtName.focus();
+        return false;
     }
 
     // check number
@@ -110,4 +117,36 @@ function btnNavAddContact_onmousedown() {
 function btnNavShowContacts_onmousedown() {
     showInformation.style.marginLeft = "0px";
     inputInformation.style.marginLeft = "0px";
+    displayAllContacts();
+}
+
+function displayAllContacts() {
+    if (gContactList.length === 0) {
+        return;
+    }
+    while (showContactList.hasChildNodes()) {
+        showContactList.removeChild(showContactList.lastChild);
+    }
+    for (var i = 0; i < gContactList.length; i++) {
+        var contactDiv = document.createElement('div');
+        contactDiv.id = "showContact";
+
+        var contactNameLabel = document.createElement('label');
+        contactNameLabel.id = "showContactName";
+        contactNameLabel.innerHTML = gContactList[i].name;
+
+        var contactBirthDateLabel = document.createElement('label');
+        contactBirthDateLabel.id = "showContactBirthDate";
+        contactBirthDateLabel.innerHTML = gContactList[i].formatDateMonthDay();
+
+        var contactPhoneNumberLabel = document.createElement('label');
+        contactPhoneNumberLabel.id = "showContactPhoneNumber";
+        contactPhoneNumberLabel.innerHTML = gContactList[i].phoneNumber;
+
+        contactDiv.appendChild(contactNameLabel);
+        contactDiv.appendChild(contactBirthDateLabel);
+        contactDiv.appendChild(contactPhoneNumberLabel);
+
+        showContactList.appendChild(contactDiv);
+    }
 }

@@ -7,7 +7,8 @@
     <meta name="viewport" content="minimal-ui, width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
     <meta name="HandheldFriendly" content="true" />
     <link rel="apple-touch-icon" href="http://cdn.marketplaceimages.windowsphone.com/v8/images/276ee3d6-bb31-4e59-8f88-fc06b7ef864b?imageType=ws_icon_small">
-    <script language="javascript" type="text/javascript" src="Logic.js"></script>
+    <script language="javascript" type="text/javascript" src="logic.js"></script>
+    <script language="javascript" type="text/javascript" src="clsContact.js"></script>
     <style type="text/css">
         body {
             margin: 0px;
@@ -191,6 +192,40 @@
             font-size: 16px;
             font-family: Sans-Serif;
         }
+
+        #showContactList {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 320px;
+            height: 440px;
+            background-color: #FFFFFF;
+            overflow: scroll;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #showContact {
+            background-color: #00b386;
+            width: 320px;
+            height: 50px;
+        }
+        #showContactName {
+            font-size: 20px;
+            left:0px;
+            text-align: center;
+        }
+        #showContactBirthDate {
+            position: relative;
+            font-size: 15px;
+            right:10px;
+            top:10px;
+        }
+        #showContactPhoneNumber {
+            position: relative;
+            font-size: 15px;
+            top:30px;
+        }
     </style>
 </head>
 <body onload="body_load();">
@@ -206,7 +241,13 @@
             <input type="tel" placeholder="Phone Number ((###)###-####)" id="txtPhoneNumber" />
             <input type="button" value="Add" id="btnAdd" />
         </div>
-        <div id="showInformation"></div>
+        <div id="showInformation">
+            <div id="showContactList">
+                <div id="showContact">
+
+                </div>
+            </div>
+        </div>
     </div>
     <div id="errorMessageMain">
         <div id="errorMessageBody">
