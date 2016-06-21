@@ -1,5 +1,6 @@
 ﻿/// <reference path="index.html">
 var gContactList;
+var gToFocus;
 
 function body_load() {
     btnNavAddContact.onmousedown = btnNavAddContact_onmousedown;
@@ -15,7 +16,11 @@ function body_load() {
 }
 
 function convertToPhoneNumber() {
+    phoneNumberParts = txtPhoneNumber.value.trim().split("");
 
+    for (var i = 0; i < phoneNumberParts.length; i++) {
+
+    }
 }
 
 function btnAdd_onmousedown() {
@@ -25,11 +30,29 @@ function btnAdd_onmousedown() {
 
     var entry = new Contact(txtName.value.trim(), txtBirthDate.value.trim(), txtPhoneNumber.value.trim());
     gContactList.push(entry);
+
+    convertToPhoneNumber();
 }
 
 function btnErrorMessageOK_onmousedown() {
     errorMessageMain.style.visibility = 'hidden';
     inputInformation.style.pointerEvents = 'all';
+
+    if (gToFocus === 0) {
+        window.setTimeout(function () {
+            txtName.focus();
+        }, 0);
+    } 
+    else if (gToFocus === 1) {
+        window.setTimeout(function () {
+            txtBirthDate.focus();
+        }, 0);
+    }
+    else if (gToFocus === 2) {
+        window.setTimeout(function () {
+            txtPhoneNumber.focus();
+        }, 0);
+    }
 }
 
 function showErrorMessage(message) {
@@ -41,12 +64,12 @@ function showErrorMessage(message) {
 function validateInput() {
     var nameErrorMessage = "Enter a name.";
     var birthDateErrorMessage = "Enter a valid birth date in the following format: YYYY/MM/DD";
-    var phoneNumberErrorMessage = "Enter a 7 digit phone number";
+    var phoneNumberErrorMessage = "Enter a 10 digit phone number";
 
     // check Name
     if (txtName.value.trim().length === 0) {
+        gToFocus = 0;
         showErrorMessage(nameErrorMessage);
-        txtName.focus();
         return false;
     }
 
@@ -54,42 +77,45 @@ function validateInput() {
     birthDateParts = txtBirthDate.value.trim().split("/");
     // alert(birthDateParts);
     if (birthDateParts.length != 3) {
+        gToFocus = 1;
         showErrorMessage(birthDateErrorMessage);
-        txtName.focus();
         return false;
     }
     if (checkIfStringIsNumber(birthDateParts[0]) === false 
         || parseInt(birthDateParts[0]) < 0
         || parseInt(birthDateParts[0]) > 9999) {
+        gToFocus = 1;
         showErrorMessage(birthDateErrorMessage);
-        txtName.focus();
         return false;
     }
     else if (checkIfStringIsNumber(birthDateParts[1]) === false 
         || parseInt(birthDateParts[1]) < 0
         || parseInt(birthDateParts[1]) > 12) {
+        gToFocus = 1;
         showErrorMessage(birthDateErrorMessage);
-        txtName.focus();
         return false;
     }
     else if (checkIfStringIsNumber(birthDateParts[2]) === false
         || parseInt(birthDateParts[2]) < 0
         || parseInt(birthDateParts[2]) > 31) {
+        gToFocus = 1;
         showErrorMessage(birthDateErrorMessage);
-        txtName.focus();
         return false;
     }
 
     // check number
-    phoneNumberString = txtPhoneNumber.value;
-    if (phoneNumberString.length != 10) {
-        showErrorMessage(phoneNumberErrorMessage);
-        txtName.focus();
-        return false;
+    phoneNumberString = txtPhoneNumber.value.trim().split("");
+
+    var totalNumbers = 0;
+
+    for (var i = 0; i < phoneNumberString.length; i++) {
+        if (checkIfStringIsNumber(phoneNumberString[i]) === true) {
+            totalNumbers += 1;
+        }
     }
-    if (checkIfStringIsNumber(phoneNumberString) === false) {
+    if (totalNumbers != 10) {
+        gToFocus = 2;
         showErrorMessage(phoneNumberErrorMessage);
-        txtName.focus();
         return false;
     }
 }
@@ -133,19 +159,25 @@ function displayAllContacts() {
 
         var contactNameLabel = document.createElement('label');
         contactNameLabel.id = "showContactName";
+        var nameTop = 50 * i + 5;
+        contactNameLabel.style.top = nameTop.toString() + "px";
         contactNameLabel.innerHTML = gContactList[i].name;
-
-        var contactBirthDateLabel = document.createElement('label');
-        contactBirthDateLabel.id = "showContactBirthDate";
-        contactBirthDateLabel.innerHTML = gContactList[i].formatDateMonthDay();
 
         var contactPhoneNumberLabel = document.createElement('label');
         contactPhoneNumberLabel.id = "showContactPhoneNumber";
+        var phoneNumberTop = 50 * i + 28;
+        contactPhoneNumberLabel.style.top = phoneNumberTop.toString() + "px";
         contactPhoneNumberLabel.innerHTML = gContactList[i].phoneNumber;
 
+        var contactBirthDateLabel = document.createElement('label');
+        contactBirthDateLabel.id = "showContactBirthDate";
+        var birthDateTop = 50 * i + 15;
+        contactBirthDateLabel.style.top = birthDateTop.toString() + "px";
+        contactBirthDateLabel.innerHTML = gContactList[i].formatDateMonthDay();
+
         contactDiv.appendChild(contactNameLabel);
-        contactDiv.appendChild(contactBirthDateLabel);
         contactDiv.appendChild(contactPhoneNumberLabel);
+        contactDiv.appendChild(contactBirthDateLabel);
 
         showContactList.appendChild(contactDiv);
     }
