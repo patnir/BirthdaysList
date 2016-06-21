@@ -39,6 +39,12 @@ function window_onresize() {
     showContactList.style.height = (window.innerHeight - 40 - 89).toString() + "px";
     showContactList.style.width = (window.innerWidth - 40).toString() + "px";
 
+    var reference = (window.innerHeight - 89 - 96 - 35) / 5
+    txtName.style.top = (reference).toString() + "px";
+    txtBirthDate.style.top = (2 * reference + 30).toString() + "px";
+    txtPhoneNumber.style.top = (3 * reference + 30 * 2).toString() + "px";
+    btnAdd.style.top = (4 * reference + 30 * 3).toString() + "px";
+
     displayAllContacts();
 }
 
