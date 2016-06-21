@@ -18,9 +18,29 @@ function body_load() {
 function convertToPhoneNumber() {
     phoneNumberParts = txtPhoneNumber.value.trim().split("");
 
-    for (var i = 0; i < phoneNumberParts.length; i++) {
+    var formattedPhoneNumber = "(";
 
+    var totalAdded = 0;
+
+    for (var i = 0; i < phoneNumberParts.length; i++) {
+        if (checkIfStringIsNumber(phoneNumberParts[i]) === true) {
+            if (totalAdded <= 2) {
+                formattedPhoneNumber += phoneNumberParts[i];
+            }
+            else if (totalAdded === 3) {
+                formattedPhoneNumber += ")" + phoneNumberParts[i];
+            }
+            else if (totalAdded === 6) {
+                formattedPhoneNumber += "-" + phoneNumberParts[i];
+            }
+            else {
+                formattedPhoneNumber += phoneNumberParts[i];
+            }
+            totalAdded++;
+        }
     }
+
+    txtPhoneNumber.value = formattedPhoneNumber;
 }
 
 function btnAdd_onmousedown() {
@@ -28,10 +48,10 @@ function btnAdd_onmousedown() {
         return;
     }
 
+    convertToPhoneNumber();
+
     var entry = new Contact(txtName.value.trim(), txtBirthDate.value.trim(), txtPhoneNumber.value.trim());
     gContactList.push(entry);
-
-    convertToPhoneNumber();
 }
 
 function btnErrorMessageOK_onmousedown() {
