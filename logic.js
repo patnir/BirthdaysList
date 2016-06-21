@@ -7,11 +7,43 @@ function body_load() {
     btnNavShowContacts.onmousedown = btnNavShowContacts_onmousedown;
     btnAdd.onmousedown = btnAdd_onmousedown;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
+    txtPhoneNumber.onfocus = txtPhoneNumber_onfocus;
+    txtPhoneNumber.onblur = txtPhoneNumber_onblur;
 
     errorMessageMain.style.visibility = 'hidden';
     
     restoreStateFromLocalStorage('contacts');
     displayAllContacts();
+}
+
+function txtPhoneNumber_onfocus() {
+    convertToPhoneNumber();
+
+    var phoneNumberString = txtPhoneNumber.value.trim().split("");
+
+    var unformattedPhoneNumber = "";
+    for (var i = 0; i < phoneNumberString.length; i++) {
+        if (checkIfStringIsNumber(phoneNumberString[i]) === true) {
+            unformattedPhoneNumber += phoneNumberString[i];
+        }
+    }
+
+    txtPhoneNumber.value = unformattedPhoneNumber;
+}
+
+function txtPhoneNumber_onblur() {
+    phoneNumberString = txtPhoneNumber.value.trim().split("");
+
+    var totalNumbers = 0;
+
+    for (var i = 0; i < phoneNumberString.length; i++) {
+        if (checkIfStringIsNumber(phoneNumberString[i]) === true) {
+            totalNumbers += 1;
+        }
+    }
+    if (totalNumbers === 10) {
+        convertToPhoneNumber();
+    }
 }
 
 function convertToPhoneNumber() {
@@ -27,7 +59,7 @@ function convertToPhoneNumber() {
                 formattedPhoneNumber += phoneNumberParts[i];
             }
             else if (totalAdded === 3) {
-                formattedPhoneNumber += ")" + phoneNumberParts[i];
+                formattedPhoneNumber += ") " + phoneNumberParts[i];
             }
             else if (totalAdded === 6) {
                 formattedPhoneNumber += "-" + phoneNumberParts[i];

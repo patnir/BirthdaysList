@@ -22,7 +22,7 @@ Contact.prototype.Deserialize = function (serializedEntry) {
 }
 
 Contact.prototype.formatDateMonthDay = function () {
-    var dateParts = this.birthDate.split("");
+    var dateParts = this.birthDate.split("/");
     var formattedString = "";
     if (parseInt(dateParts[1]) === 1) {
         formattedString += "Jan ";
