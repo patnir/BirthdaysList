@@ -65,3 +65,17 @@ Contact.prototype.formatDateMonthDay = function () {
     
     return formattedString;
 }
+
+Contact.prototype.isBirthdayToday = function() {
+    var dateParts = this.birthDate.split("/");
+    var dateToday = new Date();
+
+    var todaysDate = dateToday.getDate();
+    var todaysMonth = dateToday.getMonth() + 1;
+
+    if (todaysDate === parseInt(dateParts[2])
+        && todaysMonth === parseInt(dateParts[1])) {
+        return true;
+    }
+    return false;
+}

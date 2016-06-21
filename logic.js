@@ -2,6 +2,7 @@
 var gContactList;
 var gToFocus;
 
+
 function body_load() {
     btnNavAddContact.onmousedown = btnNavAddContact_onmousedown;
     btnNavShowContacts.onmousedown = btnNavShowContacts_onmousedown;
@@ -236,6 +237,8 @@ function displayAllContacts() {
         showContactList.removeChild(showContactList.lastChild);
     }
     for (var i = 0; i < gContactList.length; i++) {
+        var dateToday = new Date();
+
         var contactDiv = document.createElement('div');
         contactDiv.id = "showContact";
 
@@ -261,7 +264,15 @@ function displayAllContacts() {
         contactBirthDateLabel.id = "showContactBirthDate";
         var birthDateTop = 50 * i + 15;
         contactBirthDateLabel.style.top = birthDateTop.toString() + "px";
-        contactBirthDateLabel.innerHTML = gContactList[i].formatDateMonthDay();
+
+        var formattedBirthDate = gContactList[i].formatDateMonthDay();
+
+        if (gContactList[i].isBirthdayToday() === true) {
+            formattedBirthDate = "Birthday!!";
+            contactBirthDateLabel.style.color = "#FF0000";
+        }
+
+        contactBirthDateLabel.innerHTML = formattedBirthDate;
 
         contactDiv.appendChild(contactNameLabel);
         contactDiv.appendChild(contactPhoneNumberLabel);
