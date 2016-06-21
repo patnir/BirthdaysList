@@ -11,11 +11,49 @@ function body_load() {
     txtPhoneNumber.onfocus = txtPhoneNumber_onfocus;
     txtPhoneNumber.onblur = txtPhoneNumber_onblur;
 
+    window.onresize = window_onresize;
+
     errorMessageMain.style.visibility = 'hidden';
     
     restoreStateFromLocalStorage('contacts');
+    window_onresize();
+}
+
+function window_onresize() {
+    divMain.style.width = window.innerWidth.toString() + "px";
+    divMain.style.height = window.innerHeight.toString() + "px";
+    navbar.style.width = window.innerWidth.toString() + "px";
+    heading.style.width = window.innerWidth.toString() + "px";
+    btnNavAddContact.style.width = (window.innerWidth / 2 - 1).toString() + "px";
+    btnNavShowContacts.style.width = (window.innerWidth / 2 - 1).toString() + "px";
+    showInformation.style.width = window.innerWidth.toString() + "px";
+    showInformation.style.height = (window.innerHeight - 89).toString() + "px";
+    inputInformation.style.width = window.innerWidth.toString() + "px";
+    inputInformation.style.height = (window.innerHeight - 89).toString() + "px";
+    inputInformation.style.left = window.innerWidth.toString() + "px";
+    txtName.style.width = (window.innerWidth - 80).toString() + "px";
+    txtBirthDate.style.width = (window.innerWidth - 80).toString() + "px";
+    txtPhoneNumber.style.width = (window.innerWidth - 80).toString() + "px";
+    btnAdd.style.width = (window.innerWidth - 120).toString() + "px";
+
+    showContactList.style.height = (window.innerHeight - 40 - 89).toString() + "px";
+    showContactList.style.width = (window.innerWidth - 40).toString() + "px";
+
     displayAllContacts();
 }
+
+function btnNavAddContact_onmousedown() {
+    showInformation.style.marginLeft = (-1 * window.innerWidth).toString() + "px";
+    inputInformation.style.marginLeft = (-1 * window.innerWidth).toString() + "px";
+}
+
+function btnNavShowContacts_onmousedown() {
+    showInformation.style.marginLeft = "0px";
+    inputInformation.style.marginLeft = "0px";
+
+    displayAllContacts();
+}
+
 
 function txtPhoneNumber_onfocus() {
     convertToPhoneNumber();
@@ -216,19 +254,6 @@ function checkIfStringIsNumber(numberString) {
     return true;
 }
 
-function btnNavAddContact_onmousedown() {
-    showInformation.style.marginLeft = "-360px";
-    inputInformation.style.marginLeft = "-360px";
-}
-
-function btnNavShowContacts_onmousedown() {
-    showInformation.style.marginLeft = "0px";
-    inputInformation.style.marginLeft = "0px";
-    alert(gContactList.length);
-
-    displayAllContacts();
-}
-
 function displayAllContacts() {
     if (gContactList.length === 0) {
         return;
@@ -241,6 +266,7 @@ function displayAllContacts() {
 
         var contactDiv = document.createElement('div');
         contactDiv.id = "showContact";
+        contactDiv.style.width = (window.innerWidth - 40).toString() + "px";
 
         var contactNameLabel = document.createElement('label');
         contactNameLabel.id = "showContactName";
@@ -287,7 +313,6 @@ function formatLongName(longName) {
     if (nameParts[0].length > 20) {
         return nameParts[0].substring(0, 17) + "...";
     }
-    // return longName;
-    return nameParts[0] + " " + nameParts[1].substring(0, 1) + ".";
 
+    return nameParts[0] + " " + nameParts[1].substring(0, 1) + ".";
 }
