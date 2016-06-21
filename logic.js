@@ -10,8 +10,7 @@ function body_load() {
 
     errorMessageMain.style.visibility = 'hidden';
     
-    gContactList = [];
-
+    restoreStateFromLocalStorage('contacts');
     displayAllContacts();
 }
 
@@ -52,6 +51,33 @@ function btnAdd_onmousedown() {
 
     var entry = new Contact(txtName.value.trim(), txtBirthDate.value.trim(), txtPhoneNumber.value.trim());
     gContactList.push(entry);
+    addToLocalStorage(entry);
+}
+
+function addToLocalStorage(entry) {
+    var contactsSerialized = localStorage.getItem('contacts');
+    if (contactsSerialized === null) {
+        contactsSerialized = "";
+    }
+    contactsSerialized += entry.Serialize() + "\n";
+
+    localStorage.contacts = contactsSerialized;
+}
+
+function restoreStateFromLocalStorage(key) {
+    gContactList = [];
+
+    var contacts = localStorage.getItem(key);
+    if (contacts === null) {
+        return;
+    }
+    var contactsList = contacts.split("\n");
+
+    for (var i = 0; i < contactsList.length - 1; i++) {
+        var entry = new Contact("", "", "");
+        entry.Deserialize(contactsList[i]);
+        gContactList.push(entry);
+    }
 }
 
 function btnErrorMessageOK_onmousedown() {
@@ -163,6 +189,8 @@ function btnNavAddContact_onmousedown() {
 function btnNavShowContacts_onmousedown() {
     showInformation.style.marginLeft = "0px";
     inputInformation.style.marginLeft = "0px";
+    alert(gContactList.length);
+
     displayAllContacts();
 }
 
