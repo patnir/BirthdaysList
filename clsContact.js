@@ -25,40 +25,40 @@ Contact.prototype.formatDateMonthDay = function () {
     var dateParts = this.birthDate.split("/");
     var formattedString = "";
     if (parseInt(dateParts[1]) === 1) {
-        formattedString += "Jan";
+        formattedString += "Jan ";
     }
     else if (parseInt(dateParts[1]) === 2) {
-        formattedString += "Feb";
+        formattedString += "Feb ";
     }
     else if (parseInt(dateParts[1]) === 3) {
-        formattedString += "Mar";
+        formattedString += "Mar ";
     }
     else if (parseInt(dateParts[1]) === 4) {
-        formattedString += "Apr";
+        formattedString += "Apr ";
     }
     else if (parseInt(dateParts[1]) === 5) {
-        formattedString += "May";
+        formattedString += "May ";
     }
     else if (parseInt(dateParts[1]) === 6) {
-        formattedString += "Jun";
+        formattedString += "Jun ";
     }
     else if (parseInt(dateParts[1]) === 7) {
-        formattedString += "Jul";
+        formattedString += "Jul ";
     }
     else if (parseInt(dateParts[1]) === 8) {
-        formattedString += "Aug";
+        formattedString += "Aug ";
     }
     else if (parseInt(dateParts[1]) === 9) {
-        formattedString += "Sep";
+        formattedString += "Sep ";
     }
     else if (parseInt(dateParts[1]) === 10) {
-        formattedString += "Oct";
+        formattedString += "Oct ";
     }
     else if (parseInt(dateParts[1]) === 11) {
-        formattedString += "Nov";
+        formattedString += "Nov ";
     }
     else if (parseInt(dateParts[1]) === 12) {
-        formattedString += "Dec";
+        formattedString += "Dec ";
     }
 
     formattedString += dateParts[2];
