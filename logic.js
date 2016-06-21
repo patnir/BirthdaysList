@@ -45,6 +45,10 @@ function window_onresize() {
     txtPhoneNumber.style.top = (3 * reference + 30 * 2).toString() + "px";
     btnAdd.style.top = (4 * reference + 30 * 3).toString() + "px";
 
+    errorMessageMain.style.width = window.innerWidth.toString() + "px";
+    errorMessageMain.style.height = window.innerHeight.toString() + "px";
+    errorMessageBody.style.top = ((window.innerHeight - 100 - 44) / 2).toString() + "px";
+    errorMessageBody.style.left = ((window.innerWidth - 100) / 2).toString() + "px";
     displayAllContacts();
 }
 
