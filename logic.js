@@ -145,7 +145,9 @@ function validateInput() {
     var phoneNumberErrorMessage = "Enter a 10 digit phone number";
 
     // check Name
-    if (txtName.value.trim().length === 0) {
+    if (txtName.value.trim().length === 0
+        || txtName.value.includes("\n") === true
+        || txtName.value.includes("\t") === true) {
         gToFocus = 0;
         showErrorMessage(nameErrorMessage);
         return false;
@@ -241,7 +243,13 @@ function displayAllContacts() {
         contactNameLabel.id = "showContactName";
         var nameTop = 50 * i + 5;
         contactNameLabel.style.top = nameTop.toString() + "px";
-        contactNameLabel.innerHTML = gContactList[i].name;
+
+        var formattedName = gContactList[i].name;
+
+        if (formattedName.length > 20) {
+            formattedName = formatLongName(formattedName);
+        }
+        contactNameLabel.innerHTML = formattedName;
 
         var contactPhoneNumberLabel = document.createElement('label');
         contactPhoneNumberLabel.id = "showContactPhoneNumber";
@@ -261,4 +269,14 @@ function displayAllContacts() {
 
         showContactList.appendChild(contactDiv);
     }
+}
+
+function formatLongName(longName) {
+    nameParts = longName.split(" ");
+    if (nameParts[0].length > 20) {
+        return nameParts[0].substring(0, 17) + "...";
+    }
+    // return longName;
+    return nameParts[0] + " " + nameParts[1].substring(0, 1) + ".";
+
 }
