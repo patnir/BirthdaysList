@@ -16,6 +16,7 @@
             background: #FFFFFF;
             overflow: hidden;
             -webkit-text-size-adjust: none;
+            -webkit-user-select: none;
         }
 
         #divMain {
@@ -132,6 +133,64 @@
             padding-left: 5px;
         }
 
+        #deleteMessageMain {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #deleteMessageBody {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: #5200CC;
+            color: #76DAC4;
+            pointer-events: all;
+        }
+
+        #btnDeleteMessageOK {
+            position: absolute;
+            top: 150px;
+            left: 20px;
+            width: 70px;
+            height: 35px;
+            text-align: center;
+            font-family: Sans-Serif;
+            font-size: 20px;
+            border-width: 3px;
+            border-radius: 5px;
+            background-color: #00b386;
+            border-color: white;
+            color: white;
+            border-style: solid;
+        }
+
+        #btnDeleteMessageCancel {
+            position: absolute;
+            top: 150px;
+            left: 110px;
+            width: 70px;
+            height: 35px;
+            text-align: center;
+            font-family: Sans-Serif;
+            font-size: 20px;
+            border-width: 3px;
+            border-radius: 5px;
+            background-color: #00b386;
+            border-color: white;
+            color: white;
+            border-style: solid;
+        }
+
+        #deleteMessageString {
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 5px;
+            font-size: 16px;
+            font-family: Sans-Serif;
+        }
+
         #errorMessageMain {
             position: absolute;
             top: 0px;
@@ -234,6 +293,13 @@
         <div id="errorMessageBody">
             <p id="errorMessageString"></p>
             <input type="button" id="btnErrorMessageOK" value="OK" />
+        </div>
+    </div>
+    <div id="deleteMessageMain">
+        <div id="deleteMessageBody">
+            <p id="deleteMessageString"></p>
+            <input type="button" id="btnDeleteMessageOK" value="OK" />
+            <input type="button" id="btnDeleteMessageCancel" value="Cancel" />
         </div>
     </div>
 </body>

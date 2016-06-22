@@ -50,13 +50,13 @@ function window_onresize() {
 
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
-    errorMessageBody.style.top = ((window.innerHeight - 100 - 44) / 2).toString() + "px";
-    errorMessageBody.style.left = ((window.innerWidth - 100) / 2).toString() + "px";
+    errorMessageBody.style.top = ((window.innerHeight - 200 + 88) / 2).toString() + "px";
+    errorMessageBody.style.left = ((window.innerWidth - 200) / 2).toString() + "px";
 
     deleteMessageMain.style.width = window.innerWidth.toString() + "px";
     deleteMessageMain.style.height = window.innerHeight.toString() + "px";
-    deleteMessageBody.style.top = ((window.innerHeight - 100 - 44) / 2).toString() + "px";
-    deleteMessageBody.style.left = ((window.innerWidth - 100) / 2).toString() + "px";
+    deleteMessageBody.style.top = ((window.innerHeight - 200 + 88) / 2).toString() + "px";
+    deleteMessageBody.style.left = ((window.innerWidth - 200) / 2).toString() + "px";
 
     if (gShowContactsVisible === true) {
         btnNavShowContacts_onmousedown();
@@ -72,8 +72,8 @@ function window_onresize() {
 }
 
 function btnNavAddContact_onmousedown() {
-    showInformation.style.left = (-1 * window.innerWidth).toString() + "px";
     inputInformation.style.left = "0px";
+    showInformation.style.left = (-1 * window.innerWidth).toString() + "px";
     btnNavAddContact.style.color = "#FFFFFF";
     btnNavAddContact.style.backgroundColor = "#00e6ac";
     btnNavShowContacts.style.color = "#00e6ac";
@@ -222,21 +222,21 @@ function validateInput() {
         return false;
     }
     if (checkIfStringIsNumber(birthDateParts[0]) === false 
-        || parseInt(birthDateParts[0]) < 0
+        || parseInt(birthDateParts[0]) < 1
         || parseInt(birthDateParts[0]) > 9999) {
         gToFocus = 1;
         showErrorMessage(birthDateErrorMessage, txtBirthDate);
         return false;
     }
     else if (checkIfStringIsNumber(birthDateParts[1]) === false 
-        || parseInt(birthDateParts[1]) < 0
+        || parseInt(birthDateParts[1]) < 1
         || parseInt(birthDateParts[1]) > 12) {
         gToFocus = 1;
         showErrorMessage(birthDateErrorMessage, txtBirthDate);
         return false;
     }
     else if (checkIfStringIsNumber(birthDateParts[2]) === false
-        || parseInt(birthDateParts[2]) < 0
+        || parseInt(birthDateParts[2]) < 1
         || parseInt(birthDateParts[2]) > 31) {
         gToFocus = 1;
         showErrorMessage(birthDateErrorMessage, txtBirthDate);
@@ -289,7 +289,8 @@ function displayAllContacts() {
         contactDiv.id = "showContact";
         contactDiv.style.width = (window.innerWidth - 40).toString();
         contactDiv.ContactIndex = i;
-        contactDiv.onclick = contactDiv_onclick;
+        // contactDiv.onclick = contactDiv_onclick;
+        addLongPressEvent(contactDiv, contactDiv_onclick);
 
         var contactNameLabel = document.createElement('label');
         contactNameLabel.id = "showContactName";
@@ -400,4 +401,39 @@ function formatLongName(longName) {
     }
 
     return nameParts[0] + " " + nameParts[1].substring(0, 1) + ".";
+}
+
+function divListItemsRow_longPress(object) {
+    alert(object.StateName + " was long pressed.");
+}
+
+function isTouchDevice() {
+    return "ontouchstart" in window;
+}
+
+
+function addLongPressEvent(object, eventFunction) {
+
+    object.OnLongPress = eventFunction;
+
+    if (isTouchDevice() === true) {
+        object.ontouchstart = longPressStart;
+        object.ontouchend = longPressEnd;
+    }
+    else {
+        object.onmousedown = longPressStart;
+        object.onmouseup = longPressEnd;
+    }
+
+    function longPressStart() {
+        object.TimeoutID = setTimeout(longPressTimeout, 500);
+    }
+
+    function longPressTimeout() {
+        object.OnLongPress(object);
+    }
+
+    function longPressEnd() {
+        clearTimeout(object.TimeoutID);
+    }
 }
