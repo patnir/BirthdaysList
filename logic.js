@@ -26,10 +26,6 @@ function window_onresize() {
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
     heading.style.width = window.innerWidth.toString() + "px";
-    showInformation.style.width = window.innerWidth.toString() + "px";
-    showInformation.style.height = (window.innerHeight - 89).toString() + "px";
-    inputInformation.style.width = window.innerWidth.toString() + "px";
-    inputInformation.style.height = (window.innerHeight - 89).toString() + "px";
    
     showContactList.style.height = (window.innerHeight - 40 - 89).toString() + "px";
     showContactList.style.width = (window.innerWidth - 40).toString() + "px";
@@ -57,6 +53,10 @@ function window_onresize() {
         btnNavAddContact_onmousedown();
     }
 
+    showInformation.style.width = window.innerWidth.toString() + "px";
+    showInformation.style.height = (window.innerHeight - 89).toString() + "px";
+    inputInformation.style.width = window.innerWidth.toString() + "px";
+    inputInformation.style.height = (window.innerHeight - 89).toString() + "px";
 }
 
 function btnNavAddContact_onmousedown() {
@@ -185,27 +185,17 @@ function btnErrorMessageOK_onmousedown() {
     errorMessageMain.style.visibility = 'hidden';
     inputInformation.style.pointerEvents = 'all';
 
-    if (gToFocus === 0) {
-        window.setTimeout(function () {
-            txtName.focus();
-        }, 0);
-    } 
-    else if (gToFocus === 1) {
-        window.setTimeout(function () {
-            txtBirthDate.focus();
-        }, 0);
-    }
-    else if (gToFocus === 2) {
-        window.setTimeout(function () {
-            txtPhoneNumber.focus();
-        }, 0);
-    }
+    window.setTimeout(function () {
+        errorMessageMain.ObjectToFocus.focus();
+    }, 0);
 }
 
-function showErrorMessage(message) {
+function showErrorMessage(message, objectToFocus) {
     errorMessageMain.style.visibility = 'visible';
     inputInformation.style.pointerEvents = 'none';
     errorMessageString.innerHTML = message;
+
+    errorMessageMain.ObjectToFocus = objectToFocus;
 }
 
 function validateInput() {
@@ -218,36 +208,36 @@ function validateInput() {
         || txtName.value.includes('\n') === true
         || txtName.value.includes('\t') === true) {
         gToFocus = 0;
-        showErrorMessage(nameErrorMessage);
+        showErrorMessage(nameErrorMessage, txtName);
         return false;
     }
-    // check Birth Date
+    // check Birth Date. Make a date parse function check for feb, leap year, etc
     birthDateParts = txtBirthDate.value.trim().split("/");
     // alert(birthDateParts);
     if (birthDateParts.length != 3) {
         gToFocus = 1;
-        showErrorMessage(birthDateErrorMessage);
+        showErrorMessage(birthDateErrorMessage, txtBirthDate);
         return false;
     }
     if (checkIfStringIsNumber(birthDateParts[0]) === false 
         || parseInt(birthDateParts[0]) < 0
         || parseInt(birthDateParts[0]) > 9999) {
         gToFocus = 1;
-        showErrorMessage(birthDateErrorMessage);
+        showErrorMessage(birthDateErrorMessage, txtBirthDate);
         return false;
     }
     else if (checkIfStringIsNumber(birthDateParts[1]) === false 
         || parseInt(birthDateParts[1]) < 0
         || parseInt(birthDateParts[1]) > 12) {
         gToFocus = 1;
-        showErrorMessage(birthDateErrorMessage);
+        showErrorMessage(birthDateErrorMessage, txtBirthDate);
         return false;
     }
     else if (checkIfStringIsNumber(birthDateParts[2]) === false
         || parseInt(birthDateParts[2]) < 0
         || parseInt(birthDateParts[2]) > 31) {
         gToFocus = 1;
-        showErrorMessage(birthDateErrorMessage);
+        showErrorMessage(birthDateErrorMessage, txtBirthDate);
         return false;
     }
 
@@ -262,8 +252,7 @@ function validateInput() {
         }
     }
     if (totalNumbers != 10) {
-        gToFocus = 2;
-        showErrorMessage(phoneNumberErrorMessage);
+        showErrorMessage(phoneNumberErrorMessage, txtPhoneNumber);
         return false;
     }
 }
@@ -295,7 +284,9 @@ function displayAllContacts() {
 
         var contactDiv = document.createElement('div');
         contactDiv.id = "showContact";
-        contactDiv.style.width = (window.innerWidth - 40).toString() + "px";
+        contactDiv.style.width = (window.innerWidth - 40).toString();
+        contactDiv.ContactIndex = i;
+        contactDiv.onclick = contactDiv_onclick;
 
         var contactNameLabel = document.createElement('label');
         contactNameLabel.id = "showContactName";
@@ -335,6 +326,11 @@ function displayAllContacts() {
 
         showContactList.appendChild(contactDiv);
     }
+}
+
+function contactDiv_onclick() {
+    gContactList.splice(this.ContactIndex, 1);
+    displayAllContacts();
 }
 
 function formatLongName(longName) {

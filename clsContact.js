@@ -21,7 +21,7 @@ Contact.prototype.Deserialize = function (serializedEntry) {
     this.phoneNumber = entry[2];
 }
 
-Contact.prototype.formatDateMonthDay = function () {
+Contact.prototype.formatDateMonthDay = function () { // array
     var dateParts = this.birthDate.split("/");
     var formattedString = "";
     if (parseInt(dateParts[1]) === 1) {
