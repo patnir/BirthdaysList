@@ -8,7 +8,10 @@ var gContactToDelete;
 function body_load() {
     btnNavAddContact.onmousedown = btnNavAddContact_onmousedown;
     btnNavShowContacts.onmousedown = btnNavShowContacts_onmousedown;
-    btnAdd.onmousedown = btnAdd_onmousedown;
+    addNewContact.onmousedown = addNewContact_onmousedown;
+    addNewContact.onmouseup = addNewContact_onmouseup;
+    addNewContact.ontouchstart = addNewContact_onmousedown;
+    addNewContact.ontouchend = addNewContact_onmouseup;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
 
     btnDeleteMessageOK.onmousedown = btnDeleteMessageOK_onmousedown;
@@ -40,13 +43,13 @@ function window_onresize() {
     txtName.style.width = (window.innerWidth - 80).toString() + "px";
     txtBirthDate.style.width = (window.innerWidth - 80).toString() + "px";
     txtPhoneNumber.style.width = (window.innerWidth - 80).toString() + "px";
-    btnAdd.style.width = (window.innerWidth - 120).toString() + "px";
+    addNewContact.style.width = (window.innerWidth - 120).toString() + "px";
 
     var reference = (window.innerHeight - 89 - 96 - 35) / 5
     txtName.style.top = (reference).toString() + "px";
     txtBirthDate.style.top = (2 * reference + 30).toString() + "px";
     txtPhoneNumber.style.top = (3 * reference + 30 * 2).toString() + "px";
-    btnAdd.style.top = (4 * reference + 30 * 3).toString() + "px";
+    addNewContact.style.top = (4 * reference + 30 * 3).toString() + "px";
 
     errorMessageMain.style.width = window.innerWidth.toString() + "px";
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
@@ -155,7 +158,8 @@ function convertToPhoneNumber() {
     txtPhoneNumber.value = formattedPhoneNumber;
 }
 
-function btnAdd_onmousedown() {
+function addNewContact_onmousedown() {
+    addNewContact.style.backgroundColor = "#00b386";
     if (validateInput() === false) {
         return;
     }
@@ -165,6 +169,10 @@ function btnAdd_onmousedown() {
     var entry = new Contact(txtName.value.trim(), txtBirthDate.value.trim(), txtPhoneNumber.value.trim());
     gContactList.push(entry);
     addToLocalStorage(entry);
+}
+
+function addNewContact_onmouseup() {
+    addNewContact.style.backgroundColor = "#00e6ac";
 }
 
 function restoreStateFromLocalStorage(key) {
@@ -410,7 +418,6 @@ function divListItemsRow_longPress(object) {
 function isTouchDevice() {
     return "ontouchstart" in window;
 }
-
 
 function addLongPressEvent(object, eventFunction) {
 
