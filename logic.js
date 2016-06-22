@@ -1,20 +1,27 @@
 ﻿/// <reference path="index.html">
+
 var gContactList;
 var gToFocus;
 var gShowContactsVisible;
+var gContactToDelete;
 
 function body_load() {
     btnNavAddContact.onmousedown = btnNavAddContact_onmousedown;
     btnNavShowContacts.onmousedown = btnNavShowContacts_onmousedown;
     btnAdd.onmousedown = btnAdd_onmousedown;
     btnErrorMessageOK.onmousedown = btnErrorMessageOK_onmousedown;
+
+    btnDeleteMessageOK.onmousedown = btnDeleteMessageOK_onmousedown;
+    btnDeleteMessageCancel.onmousedown = btnDeleteMessageCancel_onmousedown;
+
     txtPhoneNumber.onfocus = txtPhoneNumber_onfocus;
     txtPhoneNumber.onblur = txtPhoneNumber_onblur;
 
     window.onresize = window_onresize;
 
     errorMessageMain.style.visibility = 'hidden';
-    
+    deleteMessageMain.style.visibility = 'hidden';
+
     restoreStateFromLocalStorage('contacts');
     gShowContactsVisible = true;
 
@@ -45,6 +52,11 @@ function window_onresize() {
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
     errorMessageBody.style.top = ((window.innerHeight - 100 - 44) / 2).toString() + "px";
     errorMessageBody.style.left = ((window.innerWidth - 100) / 2).toString() + "px";
+
+    deleteMessageMain.style.width = window.innerWidth.toString() + "px";
+    deleteMessageMain.style.height = window.innerHeight.toString() + "px";
+    deleteMessageBody.style.top = ((window.innerHeight - 100 - 44) / 2).toString() + "px";
+    deleteMessageBody.style.left = ((window.innerWidth - 100) / 2).toString() + "px";
 
     if (gShowContactsVisible === true) {
         btnNavShowContacts_onmousedown();
@@ -319,16 +331,38 @@ function displayAllContacts() {
     }
 }
 
-function contactDiv_onclick() {
+function btnDeleteMessageCancel_onmousedown() {
+    deleteMessageMain.style.visibility = 'hidden';
+    showInformation.style.pointerEvents = 'all';
+}
+
+function btnDeleteMessageOK_onmousedown() {
+    deleteMessageMain.style.visibility = 'hidden';
+    showInformation.style.pointerEvents = 'all';
+    deleteContact();
+}
+
+function showDeleteMessage() {
+    deleteMessageMain.style.visibility = 'visible';
+    showInformation.style.pointerEvents = 'none';
+    deleteMessageString.innerHTML = "Are you sure you would like to delete this Contact?";
+}
+
+function deleteContact() {
     if (gContactList.length === 1) {
         gContactList = []
         localStorage.contacts = "";
     }
     else {
-        gContactList.splice(this.ContactIndex, 1);
+        gContactList.splice(gContactToDelete, 1);
     }
-    removeFromLocalStorage(this.ContactIndex);
+    removeFromLocalStorage(gContactToDelete);
     displayAllContacts();
+}
+
+function contactDiv_onclick() {
+    gContactToDelete = this.ContactIndex;
+    showDeleteMessage();
 }
 
 function removeFromLocalStorage(contactIndex) {
@@ -364,7 +398,6 @@ function formatLongName(longName) {
     if (nameParts[0].length > 20) {
         return nameParts[0].substring(0, 17) + "...";
     }
-
 
     return nameParts[0] + " " + nameParts[1].substring(0, 1) + ".";
 }
