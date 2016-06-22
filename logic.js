@@ -1,7 +1,7 @@
 ﻿/// <reference path="index.html">
 var gContactList;
 var gToFocus;
-
+var gShowContactsVisible;
 
 function body_load() {
     btnNavAddContact.onmousedown = btnNavAddContact_onmousedown;
@@ -16,6 +16,8 @@ function body_load() {
     errorMessageMain.style.visibility = 'hidden';
     
     restoreStateFromLocalStorage('contacts');
+    gShowContactsVisible = true;
+
     window_onresize();
 }
 
@@ -24,20 +26,18 @@ function window_onresize() {
     divMain.style.height = window.innerHeight.toString() + "px";
     navbar.style.width = window.innerWidth.toString() + "px";
     heading.style.width = window.innerWidth.toString() + "px";
-    btnNavAddContact.style.width = (window.innerWidth / 2 - 1).toString() + "px";
-    btnNavShowContacts.style.width = (window.innerWidth / 2 - 1).toString() + "px";
     showInformation.style.width = window.innerWidth.toString() + "px";
     showInformation.style.height = (window.innerHeight - 89).toString() + "px";
     inputInformation.style.width = window.innerWidth.toString() + "px";
     inputInformation.style.height = (window.innerHeight - 89).toString() + "px";
-    inputInformation.style.left = window.innerWidth.toString() + "px";
+   
+    showContactList.style.height = (window.innerHeight - 40 - 89).toString() + "px";
+    showContactList.style.width = (window.innerWidth - 40).toString() + "px";
+
     txtName.style.width = (window.innerWidth - 80).toString() + "px";
     txtBirthDate.style.width = (window.innerWidth - 80).toString() + "px";
     txtPhoneNumber.style.width = (window.innerWidth - 80).toString() + "px";
     btnAdd.style.width = (window.innerWidth - 120).toString() + "px";
-
-    showContactList.style.height = (window.innerHeight - 40 - 89).toString() + "px";
-    showContactList.style.width = (window.innerWidth - 40).toString() + "px";
 
     var reference = (window.innerHeight - 89 - 96 - 35) / 5
     txtName.style.top = (reference).toString() + "px";
@@ -49,18 +49,38 @@ function window_onresize() {
     errorMessageMain.style.height = window.innerHeight.toString() + "px";
     errorMessageBody.style.top = ((window.innerHeight - 100 - 44) / 2).toString() + "px";
     errorMessageBody.style.left = ((window.innerWidth - 100) / 2).toString() + "px";
-    displayAllContacts();
+
+    if (gShowContactsVisible === true) {
+        btnNavShowContacts_onmousedown();
+    }
+    else {
+        btnNavAddContact_onmousedown();
+    }
+
 }
 
 function btnNavAddContact_onmousedown() {
-    showInformation.style.marginLeft = (-1 * window.innerWidth).toString() + "px";
-    inputInformation.style.marginLeft = (-1 * window.innerWidth).toString() + "px";
+    showInformation.style.left = (-1 * window.innerWidth).toString() + "px";
+    inputInformation.style.left = "0px";
+    btnNavAddContact.style.color = "#FFFFFF";
+    btnNavAddContact.style.backgroundColor = "#00e6ac";
+    btnNavShowContacts.style.color = "#00e6ac";
+    btnNavShowContacts.style.backgroundColor = "#FFFFFF";
+    btnNavAddContact.style.width = (3 * window.innerWidth / 4).toString() + "px";
+    btnNavShowContacts.style.width = (1 * window.innerWidth / 4).toString() + "px";
+    gShowContactsVisible = false;
 }
 
 function btnNavShowContacts_onmousedown() {
-    showInformation.style.marginLeft = "0px";
-    inputInformation.style.marginLeft = "0px";
-
+    showInformation.style.left = "0px";
+    inputInformation.style.left = window.innerWidth.toString() + "px";
+    btnNavAddContact.style.color = "#00e6ac";
+    btnNavAddContact.style.backgroundColor = "#FFFFFF";
+    btnNavShowContacts.style.color = "#FFFFFF";
+    btnNavShowContacts.style.backgroundColor = "#00e6ac";
+    btnNavAddContact.style.width = (window.innerWidth / 4).toString() + "px";
+    btnNavShowContacts.style.width = (3 * window.innerWidth / 4).toString() + "px";
+    gShowContactsVisible = true;
     displayAllContacts();
 }
 
@@ -189,19 +209,18 @@ function showErrorMessage(message) {
 }
 
 function validateInput() {
-    var nameErrorMessage = "Enter a name.";
+    var nameErrorMessage = "Enter a valid name.";
     var birthDateErrorMessage = "Enter a valid birth date in the following format: YYYY/MM/DD";
     var phoneNumberErrorMessage = "Enter a 10 digit phone number";
 
     // check Name
     if (txtName.value.trim().length === 0
-        || txtName.value.includes("\n") === true
-        || txtName.value.includes("\t") === true) {
+        || txtName.value.includes('\n') === true
+        || txtName.value.includes('\t') === true) {
         gToFocus = 0;
         showErrorMessage(nameErrorMessage);
         return false;
     }
-
     // check Birth Date
     birthDateParts = txtBirthDate.value.trim().split("/");
     // alert(birthDateParts);
