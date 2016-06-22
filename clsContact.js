@@ -24,44 +24,9 @@ Contact.prototype.Deserialize = function (serializedEntry) {
 Contact.prototype.FormatDateMonthDay = function () { // array
     var dateParts = this.birthDate.split("/");
     var formattedString = "";
-    if (parseInt(dateParts[1]) === 1) {
-        formattedString += "Jan ";
-    }
-    else if (parseInt(dateParts[1]) === 2) {
-        formattedString += "Feb ";
-    }
-    else if (parseInt(dateParts[1]) === 3) {
-        formattedString += "Mar ";
-    }
-    else if (parseInt(dateParts[1]) === 4) {
-        formattedString += "Apr ";
-    }
-    else if (parseInt(dateParts[1]) === 5) {
-        formattedString += "May ";
-    }
-    else if (parseInt(dateParts[1]) === 6) {
-        formattedString += "Jun ";
-    }
-    else if (parseInt(dateParts[1]) === 7) {
-        formattedString += "Jul ";
-    }
-    else if (parseInt(dateParts[1]) === 8) {
-        formattedString += "Aug ";
-    }
-    else if (parseInt(dateParts[1]) === 9) {
-        formattedString += "Sep ";
-    }
-    else if (parseInt(dateParts[1]) === 10) {
-        formattedString += "Oct ";
-    }
-    else if (parseInt(dateParts[1]) === 11) {
-        formattedString += "Nov ";
-    }
-    else if (parseInt(dateParts[1]) === 12) {
-        formattedString += "Dec ";
-    }
-
-    formattedString += dateParts[2];
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    
+    formattedString += months[dateParts[1] - 1] + " " + dateParts[2];
     
     return formattedString;
 }
