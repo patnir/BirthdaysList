@@ -21,7 +21,7 @@ Contact.prototype.Deserialize = function (serializedEntry) {
     this.phoneNumber = entry[2];
 }
 
-Contact.prototype.formatDateMonthDay = function () { // array
+Contact.prototype.FormatDateMonthDay = function () { // array
     var dateParts = this.birthDate.split("/");
     var formattedString = "";
     if (parseInt(dateParts[1]) === 1) {
@@ -66,7 +66,7 @@ Contact.prototype.formatDateMonthDay = function () { // array
     return formattedString;
 }
 
-Contact.prototype.isBirthdayToday = function() {
+Contact.prototype.IsBirthdayToday = function() {
     var dateParts = this.birthDate.split("/");
     var dateToday = new Date();
 

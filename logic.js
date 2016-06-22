@@ -263,11 +263,12 @@ function checkIfStringIsNumber(numberString) {
 }
 
 function displayAllContacts() {
-    if (gContactList.length === 0) {
-        return;
-    }
     while (showContactList.hasChildNodes()) {
         showContactList.removeChild(showContactList.lastChild);
+    }
+    if (gContactList.length === 0) {
+
+        return;
     }
     for (var i = 0; i < gContactList.length; i++) {
         var dateToday = new Date();
@@ -301,9 +302,9 @@ function displayAllContacts() {
         var birthDateTop = 50 * i + 15;
         contactBirthDateLabel.style.top = birthDateTop.toString() + "px";
 
-        var formattedBirthDate = gContactList[i].formatDateMonthDay();
+        var formattedBirthDate = gContactList[i].FormatDateMonthDay();
 
-        if (gContactList[i].isBirthdayToday() === true) {
+        if (gContactList[i].IsBirthdayToday() === true) {
             formattedBirthDate = "Birthday!!";
             contactBirthDateLabel.style.color = "#FF0000";
         }
@@ -319,7 +320,13 @@ function displayAllContacts() {
 }
 
 function contactDiv_onclick() {
-    gContactList.splice(this.ContactIndex, 1);
+    if (gContactList.length === 1) {
+        gContactList = []
+        localStorage.contacts = "";
+    }
+    else {
+        gContactList.splice(this.ContactIndex, 1);
+    }
     removeFromLocalStorage(this.ContactIndex);
     displayAllContacts();
 }
