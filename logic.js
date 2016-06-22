@@ -28,6 +28,9 @@ function body_load() {
     restoreStateFromLocalStorage('contacts');
     gShowContactsVisible = true;
 
+    addSwipeEvent(showInformation, movePanels);
+    addSwipeEvent(inputInformation, movePanels);
+
     window_onresize();
 }
 
@@ -72,6 +75,15 @@ function window_onresize() {
     showInformation.style.height = (window.innerHeight - 89).toString() + "px";
     inputInformation.style.width = window.innerWidth.toString() + "px";
     inputInformation.style.height = (window.innerHeight - 89).toString() + "px";
+}
+
+function movePanels(check) {
+    if (check === 1) {
+        btnNavAddContact_onmousedown();
+    }
+    else {
+        btnNavShowContacts_onmousedown();
+    }
 }
 
 function btnNavAddContact_onmousedown() {
@@ -411,13 +423,86 @@ function formatLongName(longName) {
     return nameParts[0] + " " + nameParts[1].substring(0, 1) + ".";
 }
 
-function divListItemsRow_longPress(object) {
-    alert(object.StateName + " was long pressed.");
-}
-
 function isTouchDevice() {
     return "ontouchstart" in window;
 }
+
+function addSwipeEvent(object, eventFunction) {
+    object.TouchMoves = 0;
+    object.TouchDownX = 0;
+    object.TouchDownY = 0;
+    object.TouchMoveX = 0;
+    object.TouchMoveY = 0;
+    object.OnSwipe = eventFunction;
+
+    if (isTouchDevice() === true) {
+        object.ontouchstart = swipeStart;
+        object.ontouchmove = swipeMove;
+        object.ontouchend = swipeEnd;
+    }
+    else {
+        object.onmousedown = swipeStart;
+        object.onmousemove = swipeMove;
+        object.onmouseup = swipeEnd;
+    }
+
+    function swipeStart(event) {
+
+        gSwipeObject = object;
+
+        object.TouchMoves = 0;
+
+        if (isTouchDevice() === true) {
+            object.TouchDownX = event.touches[0].clientX;
+            object.TouchDownY = event.touches[0].clientY;
+        }
+        else {
+            object.TouchDownX = event.clientX;
+            object.TouchDownY = event.clientY;
+        }
+    }
+
+    function swipeMove(event) {
+        object.TouchMoves++;
+
+        if (isTouchDevice() === true) {
+            object.TouchMoveX = event.touches[0].clientX;
+            object.TouchMoveY = event.touches[0].clientY;
+        }
+        else {
+            object.TouchMoveX = event.clientX;
+            object.TouchMoveY = event.clientY;
+        }
+    }
+
+    function swipeEnd() {
+
+        // Don't count as a swipe if:
+        //  the object where the swipe started is not the same as where the swipe ended,
+        //  there weren't enough touch moves,
+        //  the Y value changed too much, or
+        //  the X value didn't change enough
+
+        if (object.TouchMoves < 3
+        || gSwipeObject != object
+        || Math.abs(object.TouchDownY - object.TouchMoveY) > 100
+        || Math.abs(object.TouchDownX - object.TouchMoveX) < 50) {
+            return;
+        }
+
+        // If the end X is <= beginning X, then they swiped to the left.
+        // If the end X is > beginning X, then they swiped to the right.
+
+        if (object.TouchMoveX < object.TouchDownX) {
+            object.OnSwipe(1);
+        }
+        else {
+            object.OnSwipe(-1);
+        }
+    }
+}
+
+
 
 function addLongPressEvent(object, eventFunction) {
 
