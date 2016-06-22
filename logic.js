@@ -155,16 +155,6 @@ function btnAdd_onmousedown() {
     addToLocalStorage(entry);
 }
 
-function addToLocalStorage(entry) {
-    var contactsSerialized = localStorage.getItem('contacts');
-    if (contactsSerialized === null) {
-        contactsSerialized = "";
-    }
-    contactsSerialized += entry.Serialize() + "\n";
-
-    localStorage.contacts = contactsSerialized;
-}
-
 function restoreStateFromLocalStorage(key) {
     gContactList = [];
 
@@ -330,7 +320,36 @@ function displayAllContacts() {
 
 function contactDiv_onclick() {
     gContactList.splice(this.ContactIndex, 1);
+    removeFromLocalStorage(this.ContactIndex);
     displayAllContacts();
+}
+
+function removeFromLocalStorage(contactIndex) {
+    var contactsSerialized = localStorage.getItem('contacts');
+    if (contactsSerialized === null) {
+        return;
+    }
+    var contactsSplit = contactsSerialized.split('\n');
+
+    var contactsToAdd = "";
+
+    for (var i = 0; i < contactsSplit.length - 1; i++) {
+        if (i != contactIndex) {
+            contactsToAdd += contactsSplit[i] + "\n";
+        }
+    }
+
+    localStorage.contacts = contactsToAdd;
+}
+
+function addToLocalStorage(entry) {
+    var contactsSerialized = localStorage.getItem('contacts');
+    if (contactsSerialized === null) {
+        contactsSerialized = "";
+    }
+    contactsSerialized += entry.Serialize() + "\n";
+
+    localStorage.contacts = contactsSerialized;
 }
 
 function formatLongName(longName) {
@@ -338,6 +357,7 @@ function formatLongName(longName) {
     if (nameParts[0].length > 20) {
         return nameParts[0].substring(0, 17) + "...";
     }
+
 
     return nameParts[0] + " " + nameParts[1].substring(0, 1) + ".";
 }
