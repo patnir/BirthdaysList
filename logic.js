@@ -1,7 +1,6 @@
 ﻿/// <reference path="index.html">
 
 var gContactList;
-var gToFocus;
 var gShowContactsVisible;
 var gContactToDelete;
 
@@ -206,7 +205,7 @@ function restoreStateFromLocalStorage(key) {
 function btnErrorMessageOK_onmousedown() {
     errorMessageMain.style.visibility = 'hidden';
     inputInformation.style.pointerEvents = 'all';
-
+    addNewContact.style.backgroundColor = "#00e6ac";
     window.setTimeout(function () {
         errorMessageMain.ObjectToFocus.focus();
     }, 0);
@@ -220,45 +219,74 @@ function showErrorMessage(message, objectToFocus) {
     errorMessageMain.ObjectToFocus = objectToFocus;
 }
 
+function tryParseDate(dateString) {
+    birthDateParts = txtBirthDate.value.trim().split("/");
+    if (birthDateParts.length != 3) {
+        return false;
+    }
+    if (checkIfStringIsNumber(birthDateParts[0]) === false
+        || checkIfStringIsNumber(birthDateParts[1]) === false
+        || checkIfStringIsNumber(birthDateParts[2]) === false) {
+        return false;
+    }
+
+    var year = parseInt(birthDateParts[0]);
+    var month = parseInt(birthDateParts[1]);
+    var day = parseInt(birthDateParts[2]);
+
+    if (year < 1 || year > 9999
+        || month < 1 || month > 12
+        || day < 1 || day > 31) {
+        return false;
+    }
+
+    // check leap year
+
+    var isLeapYear = false;
+    if (year % 4 === 0
+        && !(year % 100 === 0 && year % 400 != 0)) {
+        isLeapYear = true;
+    }
+    if (isLeapYear === false && month === 2 && day > 28) {
+        return false;
+    }
+    if (isLeapYear === true && month === 2 && day > 29) {
+        return false;
+    }
+
+    if ((month === 1 
+        || month === 3
+        || month === 5
+        || month === 7
+        || month === 8
+        || month === 10
+        || month === 12) && day > 31) {
+        return false;
+    }
+    else if (day > 30) {
+        return false;
+    }
+
+    return true;
+}
+
 function validateInput() {
     var nameErrorMessage = "Enter a valid name.";
     var birthDateErrorMessage = "Enter a valid birth date in the following format: YYYY/MM/DD";
     var phoneNumberErrorMessage = "Enter a 10 digit phone number";
 
     // check Name
+
     if (txtName.value.trim().length === 0
         || txtName.value.includes('\n') === true
         || txtName.value.includes('\t') === true) {
-        gToFocus = 0;
         showErrorMessage(nameErrorMessage, txtName);
         return false;
     }
+
     // check Birth Date. Make a date parse function check for feb, leap year, etc
-    birthDateParts = txtBirthDate.value.trim().split("/");
-    // alert(birthDateParts);
-    if (birthDateParts.length != 3) {
-        gToFocus = 1;
-        showErrorMessage(birthDateErrorMessage, txtBirthDate);
-        return false;
-    }
-    if (checkIfStringIsNumber(birthDateParts[0]) === false 
-        || parseInt(birthDateParts[0]) < 1
-        || parseInt(birthDateParts[0]) > 9999) {
-        gToFocus = 1;
-        showErrorMessage(birthDateErrorMessage, txtBirthDate);
-        return false;
-    }
-    else if (checkIfStringIsNumber(birthDateParts[1]) === false 
-        || parseInt(birthDateParts[1]) < 1
-        || parseInt(birthDateParts[1]) > 12) {
-        gToFocus = 1;
-        showErrorMessage(birthDateErrorMessage, txtBirthDate);
-        return false;
-    }
-    else if (checkIfStringIsNumber(birthDateParts[2]) === false
-        || parseInt(birthDateParts[2]) < 1
-        || parseInt(birthDateParts[2]) > 31) {
-        gToFocus = 1;
+
+    if (tryParseDate(txtBirthDate.value.trim()) === false) {
         showErrorMessage(birthDateErrorMessage, txtBirthDate);
         return false;
     }
@@ -447,7 +475,6 @@ function addSwipeEvent(object, eventFunction) {
     }
 
     function swipeStart(event) {
-
         gSwipeObject = object;
 
         object.TouchMoves = 0;
@@ -476,23 +503,12 @@ function addSwipeEvent(object, eventFunction) {
     }
 
     function swipeEnd() {
-
-        // Don't count as a swipe if:
-        //  the object where the swipe started is not the same as where the swipe ended,
-        //  there weren't enough touch moves,
-        //  the Y value changed too much, or
-        //  the X value didn't change enough
-
         if (object.TouchMoves < 3
         || gSwipeObject != object
         || Math.abs(object.TouchDownY - object.TouchMoveY) > 100
         || Math.abs(object.TouchDownX - object.TouchMoveX) < 50) {
             return;
         }
-
-        // If the end X is <= beginning X, then they swiped to the left.
-        // If the end X is > beginning X, then they swiped to the right.
-
         if (object.TouchMoveX < object.TouchDownX) {
             object.OnSwipe(1);
         }
@@ -505,7 +521,7 @@ function addSwipeEvent(object, eventFunction) {
 
 
 function addLongPressEvent(object, eventFunction) {
-
+    
     object.OnLongPress = eventFunction;
 
     if (isTouchDevice() === true) {
